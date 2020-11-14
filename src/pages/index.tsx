@@ -1,5 +1,6 @@
-import { Box, SimpleGrid } from '@chakra-ui/react'
+import { Box, Button } from '@chakra-ui/react'
 import { useQuery } from 'react-query'
+import NextLink from 'next/link'
 
 import { FeaturedPoke } from 'src/components/featuredPoke/featuredPoke'
 import { Layout } from 'src/components/layout/layout'
@@ -21,13 +22,31 @@ export default function Home() {
   )
   return (
     <Layout>
-      <Box textAlign="center">
-        <Logo />
-      </Box>
+      <NextLink href="/">
+        <a>
+          <Box textAlign="center" cursor="pointer">
+            <Logo />
+          </Box>
+        </a>
+      </NextLink>
       {isLoading && 'carregando'}
       <Box mx="auto" py={6}>
         {data && <FeaturedPoke {...data} />}
       </Box>
+      <NextLink href="/all">
+        <a>
+          <Button
+            variant="outline"
+            colorScheme="white"
+            bg="white"
+            position="absolute"
+            right={8}
+            bottom={8}
+          >
+            See all
+          </Button>
+        </a>
+      </NextLink>
     </Layout>
   )
 }
