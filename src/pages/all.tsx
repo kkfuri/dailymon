@@ -43,12 +43,7 @@ export default function All() {
           size="xl"
         />
       )}
-      <button
-        onClick={() => fetchMore()}
-        disabled={!canFetchMore || isFetchingMore}
-      >
-        load more
-      </button>
+      <button onClick={() => fetchMore()}>load more</button>
     </Layout>
   )
 }
