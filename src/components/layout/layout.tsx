@@ -1,5 +1,4 @@
 import { Flex } from '@chakra-ui/react'
-import { css } from '@emotion/react'
 
 export const Layout = ({ children }) => {
   return (
