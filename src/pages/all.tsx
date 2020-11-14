@@ -30,7 +30,13 @@ export default function All() {
         </a>
       </NextLink>
       <Flex flexDir="column" my={12}>
-        <SimpleGrid columns={3} spacing={6} maxW={1240} mx="auto" py={6}>
+        <SimpleGrid
+          columns={{ base: 1, md: 2, xl: 3 }}
+          spacing={6}
+          maxW={1240}
+          mx="auto"
+          py={6}
+        >
           {data &&
             data.map(({ data: group }) =>
               group.results.map((i) => <Pokecard {...i} />)
