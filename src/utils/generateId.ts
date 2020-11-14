@@ -4,5 +4,5 @@ export function generateId() {
     date.getFullYear() + date.getUTCDay() + date.getUTCMonth()
   const id = generatedNumber > 800 ? generatedNumber / 4 : generatedNumber
 
-  return id
+  return Math.round(id)
 }

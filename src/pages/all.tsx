@@ -1,5 +1,6 @@
-import { Box, SimpleGrid, Spinner } from '@chakra-ui/react'
+import { Box, Button, Flex, Icon, SimpleGrid } from '@chakra-ui/react'
 import NextLink from 'next/link'
+import { FiPlus } from 'react-icons/fi'
 
 import { useInfiniteQuery } from 'react-query'
 import { Layout } from 'src/components/layout/layout'
@@ -28,22 +29,19 @@ export default function All() {
           </Box>
         </a>
       </NextLink>
-      <SimpleGrid columns={3} spacing={6} maxW={1240} mx="auto" py={6}>
-        {data &&
-          data.map(({ data: group }) =>
-            group.results.map((i) => <Pokecard {...i} />)
-          )}
-      </SimpleGrid>
-      {isFetchingMore && (
-        <Spinner
-          thickness="4px"
-          speed="0.65s"
-          emptyColor="gray.200"
-          color="blue.500"
-          size="xl"
-        />
-      )}
-      <button onClick={() => fetchMore()}>load more</button>
+      <Flex flexDir="column" my={12}>
+        <SimpleGrid columns={3} spacing={6} maxW={1240} mx="auto" py={6}>
+          {data &&
+            data.map(({ data: group }) =>
+              group.results.map((i) => <Pokecard {...i} />)
+            )}
+        </SimpleGrid>
+        <Box mx="auto">
+          <Button onClick={() => fetchMore()} isLoading={!!isFetchingMore}>
+            See more <Icon as={FiPlus} ml={2} />
+          </Button>
+        </Box>
+      </Flex>
     </Layout>
   )
 }

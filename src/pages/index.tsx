@@ -10,16 +10,12 @@ import api from 'src/utils/api'
 
 const getPokemon = async (pokemonId: number): Promise<PokemonAttrs> => {
   const { data } = await api.get(`pokemon/${pokemonId}`)
-
   return data
 }
 
 export default function Home() {
   const pokemonId = generateId()
-  const { data, isLoading } = useQuery<PokemonAttrs, Error>(
-    pokemonId,
-    getPokemon
-  )
+  const { data } = useQuery<PokemonAttrs, Error>(pokemonId, getPokemon)
   return (
     <Layout>
       <NextLink href="/">
@@ -29,7 +25,6 @@ export default function Home() {
           </Box>
         </a>
       </NextLink>
-      {isLoading && 'carregando'}
       <Box mx="auto" py={6}>
         {data && <FeaturedPoke {...data} />}
       </Box>
