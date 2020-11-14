@@ -24,7 +24,7 @@ export default function Home() {
     <Layout>
       <NextLink href="/">
         <a>
-          <Box textAlign="center" cursor="pointer">
+          <Box textAlign="center" cursor="pointer" mt={4}>
             <Logo />
           </Box>
         </a>
