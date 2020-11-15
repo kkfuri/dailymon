@@ -20,7 +20,11 @@ export const Pokecard = ({ url, name }) => {
   const { id, types, sprites } = data || {}
   const number = id ? id.toString().padStart(3, '0') : null
   const formattedTypes = types?.map((i) => i.type.name)
-  const pokeColor = colorByType[formattedTypes?.[0]] || 'white'
+  const mainColor = colorByType[formattedTypes?.[0]] || 'white'
+  const avgColor =
+    formattedTypes?.length > 1
+      ? chroma.average(formattedTypes.map((i) => colorByType[i]))
+      : mainColor
 
   return (
     <Box
@@ -30,7 +34,7 @@ export const Pokecard = ({ url, name }) => {
       w={340}
       p={1}
       cursor="pointer"
-      bg={chroma(pokeColor).brighten().alpha(0.2).css()}
+      bg={chroma(avgColor).brighten().alpha(0.2).css()}
       borderRadius={12}
       transition="padding .2s"
       _hover={{ p: 0 }}
@@ -42,9 +46,9 @@ export const Pokecard = ({ url, name }) => {
         borderRadius={12}
         backgroundImage={`url(${
           sprites?.other?.['official-artwork']?.front_default
-        }), linear-gradient(150deg, ${chroma(pokeColor)
+        }), linear-gradient(150deg, ${chroma(avgColor)
           .brighten(0.8)
-          .css()}, ${pokeColor})`}
+          .css()}, ${mainColor})`}
         backgroundRepeat="no-repeat"
         backgroundPosition="110% 30%,center"
         backgroundSize="200px, cover"
@@ -58,9 +62,9 @@ export const Pokecard = ({ url, name }) => {
         </Stack>
         <Flex
           alignItems="center"
-          color={chroma(pokeColor).darken().hex()}
+          color={chroma(mainColor).darken().hex()}
           transition="color .4s"
-          _groupHover={{ color: chroma(pokeColor).darken(3).hex() }}
+          _groupHover={{ color: chroma(mainColor).darken(3).hex() }}
         >
           <Heading
             as="h1"

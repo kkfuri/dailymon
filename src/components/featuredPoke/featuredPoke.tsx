@@ -7,14 +7,14 @@ import { Box, Flex, Heading, Stack } from '@chakra-ui/react'
 import { colorByType } from 'src/utils/constants'
 import { Stats } from '../stats/stats'
 
-const backgroundWithImage = (color, image) => ({
-  backgroundImage: `url(${image}), linear-gradient(150deg, ${chroma(color)
+const backgroundWithImage = (color, avgColor, image) => ({
+  backgroundImage: `url(${image}), linear-gradient(150deg, ${chroma(avgColor)
     .brighten(0.8)
     .css()}, ${color})`,
   backgroundRepeat: 'no-repeat',
   backgroundPosition: 'center ,center',
   backgroundSize: '320px, cover',
-  backgroundBlendMode: 'soft-light',
+  backgroundBlendMode: 'hard-light',
 })
 
 export const FeaturedPoke: React.FC<PokemonAttrs> = ({
@@ -28,7 +28,11 @@ export const FeaturedPoke: React.FC<PokemonAttrs> = ({
 }) => {
   const number = id ? id.toString().padStart(3, '0') : null
   const formattedTypes = types?.map((i) => i.type.name)
-  const pokeColor = colorByType[formattedTypes?.[0]] || 'white'
+  const mainColor = colorByType[formattedTypes?.[0]] || 'white'
+  const avgColor =
+    formattedTypes?.length > 1
+      ? chroma.average(formattedTypes.map((i) => colorByType[i]))
+      : mainColor
   return (
     <Flex>
       <Box
@@ -38,17 +42,18 @@ export const FeaturedPoke: React.FC<PokemonAttrs> = ({
         h={390}
         w={{ base: 240, lg: 480 }}
         {...backgroundWithImage(
-          pokeColor,
+          mainColor,
+          avgColor,
           sprites?.other?.['official-artwork']?.front_default
         )}
         borderRadius={12}
         p={3}
         transition="background-size .4s"
         _hover={{
-          backgroundSize: '460px, cover',
+          backgroundSize: '420px, cover',
         }}
       >
-        <Stack isInline spacing={2}>
+        <Stack isInline spacing={2} position="absolute">
           {formattedTypes?.map((type) => (
             <Box
               color={colorByType[type]}
@@ -65,11 +70,19 @@ export const FeaturedPoke: React.FC<PokemonAttrs> = ({
           ))}
         </Stack>
         <Box
-          mt={8}
           textAlign="center"
-          color={chroma(pokeColor).darken().hex()}
+          color={
+            chroma.contrast('white', mainColor) > 4.5
+              ? chroma(mainColor).brighten(2).css()
+              : chroma(mainColor).darken(2).css()
+          }
           transition="color .4s"
-          _groupHover={{ color: chroma(pokeColor).darken(3).hex() }}
+          _groupHover={{
+            color:
+              chroma.contrast('white', mainColor) > 4.5
+                ? chroma(mainColor).brighten(3).css()
+                : chroma(mainColor).darken(3).css(),
+          }}
         >
           {id && (
             <Heading as="h3" size="4xl" ml={1}>
@@ -86,7 +99,11 @@ export const FeaturedPoke: React.FC<PokemonAttrs> = ({
             fontWeight="normal"
             textTransform="capitalize"
             py={4}
-            bg={chroma(pokeColor).brighten(2).alpha(0.2).css()}
+            bg={
+              chroma.contrast('white', mainColor) <= 4.5
+                ? chroma(mainColor).brighten(2).alpha(0.2).css()
+                : chroma(mainColor).darken(2).alpha(0.2).css()
+            }
           >
             {name}
           </Heading>
@@ -119,13 +136,13 @@ export const FeaturedPoke: React.FC<PokemonAttrs> = ({
             { title: 'Height', value: `${height / 10}m` },
             { title: 'Weight', value: `${weight / 10}kg` },
           ]}
-          color={pokeColor}
+          color={mainColor}
           IconAs={AiOutlineNumber}
         />
         <Stats
           title="Stats"
           list={stats.map((i) => ({ title: i.stat.name, value: i.base_stat }))}
-          color={pokeColor}
+          color={mainColor}
           IconAs={CgPokemon}
         />
       </Stack>

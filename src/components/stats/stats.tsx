@@ -59,7 +59,9 @@ export const Stats: React.FC<StatsProps> = ({ color, title, IconAs, list }) => {
       </Flex>
       <Stack spacing={0}>
         {list.map(({ title, value }) => (
-          <ContrastText color={color}>{[title, value].join(' ')}</ContrastText>
+          <ContrastText color={color}>
+            {title} <strong>{value}</strong>
+          </ContrastText>
         ))}
       </Stack>
     </Box>
