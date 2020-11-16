@@ -1,6 +1,7 @@
 import { Box, Button } from '@chakra-ui/react'
 import { useQuery } from 'react-query'
 import NextLink from 'next/link'
+import Head from 'next/head'
 
 import { FeaturedPoke } from 'src/components/featuredPoke/featuredPoke'
 import { Layout } from 'src/components/layout/layout'
@@ -17,31 +18,36 @@ export default function Home() {
   const pokemonId = generateId()
   const { data } = useQuery<PokemonAttrs, Error>(pokemonId, getPokemon)
   return (
-    <Layout>
-      <NextLink href="/">
-        <a>
-          <Box textAlign="center" cursor="pointer" mt={4}>
-            <Logo />
-          </Box>
-        </a>
-      </NextLink>
-      <Box mx="auto" py={6}>
-        {data && <FeaturedPoke {...data} />}
-      </Box>
-      <NextLink href="/all">
-        <a>
-          <Button
-            variant="outline"
-            colorScheme="white"
-            bg="white"
-            position="absolute"
-            right={8}
-            bottom={8}
-          >
-            See all
-          </Button>
-        </a>
-      </NextLink>
-    </Layout>
+    <>
+      <Head>
+        <title>Dailymon - every day a new pokemon</title>
+      </Head>
+      <Layout>
+        <NextLink href="/">
+          <a>
+            <Box textAlign="center" cursor="pointer" mt={4}>
+              <Logo />
+            </Box>
+          </a>
+        </NextLink>
+        <Box mx="auto" py={6}>
+          {data && <FeaturedPoke {...data} />}
+        </Box>
+        <NextLink href="/all">
+          <a>
+            <Button
+              variant="outline"
+              colorScheme="white"
+              bg="white"
+              position="absolute"
+              right={8}
+              bottom={8}
+            >
+              See all
+            </Button>
+          </a>
+        </NextLink>
+      </Layout>
+    </>
   )
 }
