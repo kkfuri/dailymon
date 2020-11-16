@@ -6,6 +6,7 @@ import { Box, Flex, Heading, Stack } from '@chakra-ui/react'
 
 import { colorByType } from 'src/utils/constants'
 import { Stats } from '../stats/stats'
+import { Evolutions } from '../evolutions/evolutions'
 
 const backgroundWithImage = (color, avgColor, image) => ({
   backgroundImage: `url(${image}), linear-gradient(150deg, ${chroma(avgColor)
@@ -23,6 +24,7 @@ export const FeaturedPoke: React.FC<PokemonAttrs> = ({
   sprites,
   name,
   stats,
+  species,
   height,
   weight,
 }) => {
@@ -34,118 +36,128 @@ export const FeaturedPoke: React.FC<PokemonAttrs> = ({
       ? chroma.average(formattedTypes.map((i) => colorByType[i]))
       : mainColor
   return (
-    <Flex>
-      <Box
-        position="relative"
-        role="group"
-        mr={4}
-        h={390}
-        w={{ base: 240, lg: 480 }}
-        {...backgroundWithImage(
-          mainColor,
-          avgColor,
-          sprites?.other?.['official-artwork']?.front_default
-        )}
-        borderRadius={12}
-        p={3}
-        transition="background-size .4s"
-        _hover={{
-          backgroundSize: '420px, cover',
-        }}
+    <Flex flexDir="column">
+      <Stack
+        spacing={4}
+        mb={4}
+        direction={{ base: 'column', md: 'row' }}
+        alignItems={{ xs: 'center', md: 'unset' }}
       >
-        <Stack isInline spacing={2} position="absolute">
-          {formattedTypes?.map((type) => (
-            <Box
-              color={colorByType[type]}
-              bg={chroma(colorByType[type]).brighten().hex()}
-              borderRadius={4}
-              boxShadow="sm"
-              px={2}
-              fontWeight="bold"
-              fontSize="xs"
-              textTransform="uppercase"
-            >
-              {type}
-            </Box>
-          ))}
-        </Stack>
         <Box
-          textAlign="center"
-          color={
-            chroma.contrast('white', mainColor) > 4.5
-              ? chroma(mainColor).brighten(2).css()
-              : chroma(mainColor).darken(2).css()
-          }
-          transition="color .4s"
-          _groupHover={{
-            color:
-              chroma.contrast('white', mainColor) > 4.5
-                ? chroma(mainColor).brighten(3).css()
-                : chroma(mainColor).darken(3).css(),
+          position="relative"
+          role="group"
+          h={390}
+          w={{ base: 'full', lg: 480 }}
+          {...backgroundWithImage(
+            mainColor,
+            avgColor,
+            sprites?.other?.['official-artwork']?.front_default
+          )}
+          borderRadius={12}
+          p={3}
+          transition="background-size .4s"
+          _hover={{
+            backgroundSize: '420px, cover',
           }}
         >
-          {id && (
-            <Heading as="h3" size="4xl" ml={1}>
-              #{number}
-            </Heading>
-          )}
-          <Heading
-            as="h1"
-            position="absolute"
-            borderRadius="0 0 12px 12px"
-            inset={0}
-            top="auto"
-            size="3xl"
-            fontWeight="normal"
-            textTransform="capitalize"
-            py={4}
-            bg={
-              chroma.contrast('white', mainColor) <= 4.5
-                ? chroma(mainColor).brighten(2).alpha(0.2).css()
-                : chroma(mainColor).darken(2).alpha(0.2).css()
+          <Stack isInline spacing={2} position="absolute">
+            {formattedTypes?.map((type) => (
+              <Box
+                color={colorByType[type]}
+                bg={chroma(colorByType[type]).brighten().hex()}
+                borderRadius={4}
+                boxShadow="sm"
+                px={2}
+                fontWeight="bold"
+                fontSize="xs"
+                textTransform="uppercase"
+              >
+                {type}
+              </Box>
+            ))}
+          </Stack>
+          <Box
+            textAlign="center"
+            color={
+              chroma.contrast('white', mainColor) > 4.5
+                ? chroma(mainColor).brighten(2).css()
+                : chroma(mainColor).darken(2).css()
             }
+            transition="color .4s"
+            _groupHover={{
+              color:
+                chroma.contrast('white', mainColor) > 4.5
+                  ? chroma(mainColor).brighten(3).css()
+                  : chroma(mainColor).darken(3).css(),
+            }}
           >
-            {name}
-          </Heading>
+            {id && (
+              <Heading as="h3" size="4xl" ml={1}>
+                #{number}
+              </Heading>
+            )}
+            <Heading
+              as="h1"
+              position="absolute"
+              borderRadius="0 0 12px 12px"
+              inset={0}
+              top="auto"
+              size="3xl"
+              fontWeight="normal"
+              textTransform="capitalize"
+              py={4}
+              bg={
+                chroma.contrast('white', mainColor) <= 4.5
+                  ? chroma(mainColor).brighten(2).alpha(0.2).css()
+                  : chroma(mainColor).darken(2).alpha(0.2).css()
+              }
+            >
+              {name}
+            </Heading>
+          </Box>
+          <Box
+            position="absolute"
+            top={-8}
+            right={-10}
+            zIndex={10}
+            transition="transform .4s"
+            _groupHover={{ transform: 'scale(1.1)' }}
+          >
+            {sprites && (
+              <>
+                <Image
+                  src={sprites?.front_default}
+                  width={116}
+                  height={116}
+                  quality={100}
+                />
+              </>
+            )}
+          </Box>
         </Box>
-        <Box
-          position="absolute"
-          top={-8}
-          right={-10}
-          zIndex={10}
-          transition="transform .4s"
-          _groupHover={{ transform: 'scale(1.1)' }}
-        >
-          {sprites && (
-            <>
-              <Image
-                src={sprites?.front_default}
-                width={116}
-                height={116}
-                quality={100}
-              />
-            </>
-          )}
-        </Box>
-      </Box>
-      <Stack spacing={4}>
-        <Stats
-          title="Pokédex data"
-          list={[
-            { title: 'nº.', value: number },
-            { title: 'Height', value: `${height / 10}m` },
-            { title: 'Weight', value: `${weight / 10}kg` },
-          ]}
-          color={mainColor}
-          IconAs={AiOutlineNumber}
-        />
-        <Stats
-          title="Stats"
-          list={stats.map((i) => ({ title: i.stat.name, value: i.base_stat }))}
-          color={mainColor}
-          IconAs={CgPokemon}
-        />
+        <Stack spacing={4} direction={{ base: 'row', md: 'column' }}>
+          <Stats
+            title="Pokédex data"
+            list={[
+              { title: 'nº.', value: number },
+              { title: 'Height', value: `${height / 10}m` },
+              { title: 'Weight', value: `${weight / 10}kg` },
+            ]}
+            color={mainColor}
+            IconAs={AiOutlineNumber}
+          />
+          <Stats
+            title="Stats"
+            list={stats.map((i) => ({
+              title: i.stat.name,
+              value: i.base_stat,
+            }))}
+            color={mainColor}
+            IconAs={CgPokemon}
+          />
+        </Stack>
       </Stack>
+      <Evolutions url={species.url} />
     </Flex>
   )
 }

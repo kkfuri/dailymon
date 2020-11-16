@@ -55,7 +55,7 @@ export const Stats: React.FC<StatsProps> = ({ color, title, IconAs, list }) => {
             />
           </Flex>
         )}
-        <Heading fontSize="xl">{title}</Heading>
+        <Heading fontSize={{ base: 'lg', md: 'xl' }}>{title}</Heading>
       </Flex>
       <Stack spacing={0}>
         {list.map(({ title, value }) => (
