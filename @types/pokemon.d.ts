@@ -18,4 +18,5 @@ interface PokemonAttrs {
   height: number
   weight: number
   types: { type: { name: string } }[]
+  species: any
 }
