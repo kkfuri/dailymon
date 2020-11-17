@@ -16,13 +16,13 @@ export default function Home({ pokemon }) {
         <title>Dailymon - every day a new pokemon</title>
       </Head>
       <Layout>
-        <NextLink href="/">
-          <a>
-            <Box textAlign="center" cursor="pointer" mt={4}>
+        <Box textAlign="center" mt={4}>
+          <NextLink href="/">
+            <a>
               <Logo />
-            </Box>
-          </a>
-        </NextLink>
+            </a>
+          </NextLink>
+        </Box>
         <Box mx="auto" py={6}>
           {pokemon && <FeaturedPoke {...pokemon} />}
         </Box>

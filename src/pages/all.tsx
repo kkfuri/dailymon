@@ -27,13 +27,13 @@ export default function All() {
         <title>Dailymon - every day a new pokemon</title>
       </Head>
       <Layout>
-        <NextLink href="/">
-          <a>
-            <Box textAlign="center" cursor="pointer" mt={4}>
+        <Box textAlign="center" mt={4}>
+          <NextLink href="/">
+            <a>
               <Logo />
-            </Box>
-          </a>
-        </NextLink>
+            </a>
+          </NextLink>
+        </Box>
         <Flex flexDir="column" my={12}>
           <SimpleGrid
             columns={{ base: 1, md: 2, xl: 3 }}
