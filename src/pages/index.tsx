@@ -1,22 +1,15 @@
 import { Box, Button } from '@chakra-ui/react'
-import { useQuery } from 'react-query'
 import NextLink from 'next/link'
 import Head from 'next/head'
+import random from 'lodash.random'
+import Axios from 'axios'
 
 import { FeaturedPoke } from 'src/components/featuredPoke/featuredPoke'
 import { Layout } from 'src/components/layout/layout'
 import { Logo } from 'src/components/logo/logo'
-import { generateId } from 'src/utils/generateId'
 import api from 'src/utils/api'
 
-const getPokemon = async (pokemonId: number): Promise<PokemonAttrs> => {
-  const { data } = await api.get(`pokemon/${pokemonId}`)
-  return data
-}
-
-export default function Home() {
-  const pokemonId = generateId()
-  const { data } = useQuery<PokemonAttrs, Error>(pokemonId, getPokemon)
+export default function Home({ pokemon }) {
   return (
     <>
       <Head>
@@ -31,7 +24,7 @@ export default function Home() {
           </a>
         </NextLink>
         <Box mx="auto" py={6}>
-          {data && <FeaturedPoke {...data} />}
+          {pokemon && <FeaturedPoke {...pokemon} />}
         </Box>
         <NextLink href="/all">
           <a>
@@ -50,4 +43,17 @@ export default function Home() {
       </Layout>
     </>
   )
+}
+
+export async function getStaticProps(ctx) {
+  const id = random(1049)
+  const pokemon = await api
+    .get(`/pokemon?limit=1&offset=${id}`)
+    .then(
+      async (res) =>
+        await Axios.get(res.data.results?.pop().url).then(({ data }) => data)
+    )
+  return {
+    props: { pokemon },
+  }
 }
