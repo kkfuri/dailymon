@@ -34,6 +34,7 @@ export const Evolutions = ({ url }) => {
 
   return (
     <SimpleGrid
+      hidden={possibleEvos?.length === 1}
       columns={possibleEvos?.length}
       spacing={4}
       mx="auto"
