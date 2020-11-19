@@ -20,7 +20,7 @@ export default function Home({ pokemon }) {
 }
 
 export async function getStaticProps(ctx) {
-  const id = random(1049)
+  const id = random(880)
   const pokemon = await api
     .get(`/pokemon?limit=1&offset=${id}`)
     .then(
