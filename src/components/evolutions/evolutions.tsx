@@ -35,23 +35,15 @@ export const Evolutions = ({ url }) => {
   return (
     <SimpleGrid
       hidden={possibleEvos?.length === 1}
-      columns={possibleEvos?.length}
+      columns={{
+        base: 1,
+        md: possibleEvos?.length > 3 ? 3 : possibleEvos?.length,
+      }}
       spacing={4}
-      mx="auto"
-      w="full"
-      display="flex"
-      flexDir={{ base: 'column', md: 'row' }}
-      overflow="hidden"
     >
-      {possibleEvos?.length <= 3 ? (
-        possibleEvos.map((evo, i) => <EvolutionCard {...evo} arrow={i !== 0} />)
-      ) : (
-        <>
-          <EvolutionCard {...possibleEvos?.[0]} />
-          <EvolutionCard {...possibleEvos?.[1]} arrow />
-          <EvolutionCard {...possibleEvos?.[2]} arrow />
-        </>
-      )}
+      {possibleEvos?.map((evo, i) => (
+        <EvolutionCard key={evo.name} {...evo} arrow={i % 3 !== 0} />
+      ))}
     </SimpleGrid>
   )
 }

@@ -23,7 +23,12 @@ export default function Home({ pokemon }) {
             </a>
           </NextLink>
         </Box>
-        <Box mx="auto" py={6}>
+        <Box
+          mx="auto"
+          w={{ base: '80%', md: 'full' }}
+          maxW={{ md: 720 }}
+          py={6}
+        >
           {pokemon && <FeaturedPoke {...pokemon} />}
         </Box>
         <NextLink href="/all">
@@ -46,7 +51,7 @@ export default function Home({ pokemon }) {
 }
 
 export async function getStaticProps(ctx) {
-  const id = random(1049)
+  const id = 132
   const pokemon = await api
     .get(`/pokemon?limit=1&offset=${id}`)
     .then(

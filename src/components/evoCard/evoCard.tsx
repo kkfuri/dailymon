@@ -62,7 +62,7 @@ export const EvolutionCard: React.FC<EvoCardProps> = ({ url, arrow }) => {
             .brighten(0.8)
             .css()}, ${mainColor})`}
           borderRadius="full"
-          shadow="lg"
+          shadow="md"
           zIndex={100}
           color="white"
         >
