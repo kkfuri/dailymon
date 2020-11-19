@@ -1,12 +1,13 @@
 import Image from 'next/image'
 import NextLink from 'next/link'
 import Axios from 'axios'
-import { Box, Flex, Heading } from '@chakra-ui/react'
+import { Box, Flex, Heading, Skeleton, Spinner, Stack } from '@chakra-ui/react'
 import { useQuery } from 'react-query'
 import chroma from 'chroma-js'
 import { CgArrowDown, CgArrowRight } from 'react-icons/cg'
 
 import { colorByType } from 'src/utils/constants'
+import { PokemonType } from '../pokemonType/pokemonType'
 
 const getPokemonUrl = async (url: string): Promise<PokemonAttrs> => {
   const { data } = await Axios.get(url).then(async (res) => {
@@ -18,31 +19,33 @@ const getPokemonUrl = async (url: string): Promise<PokemonAttrs> => {
 }
 
 interface EvoCardProps {
+  name: string
   url: string
   arrow?: boolean
 }
 
-export const EvolutionCard: React.FC<EvoCardProps> = ({ url, arrow }) => {
+export const EvolutionCard: React.FC<EvoCardProps> = ({ name, url, arrow }) => {
   const { data } = useQuery<PokemonAttrs, Error>(`${url} evo`, () =>
     getPokemonUrl(url)
   )
 
-  const { id, name, types, sprites } = data || {}
+  const { id, types, sprites } = data || {}
   const number = id ? id.toString().padStart(3, '0') : null
   const formattedTypes = types?.map((i) => i.type.name)
-  const mainColor = colorByType[formattedTypes?.[0]] || 'white'
+  const mainColor = colorByType[formattedTypes?.[0]] || 'gray'
   const avgColor =
     formattedTypes?.length > 1
       ? chroma.average(formattedTypes.map((i) => colorByType[i]))
       : mainColor
 
   return (
-    <NextLink href={`/${id}`} passHref>
+    <NextLink href={id ? `/${id}` : '/'} passHref>
       <Box
         as="a"
         position="relative"
         role="group"
         h={130}
+        minH={130}
         w="full"
         borderRadius={12}
         background={`linear-gradient(150deg, ${chroma(avgColor)
@@ -50,8 +53,6 @@ export const EvolutionCard: React.FC<EvoCardProps> = ({ url, arrow }) => {
           .css()}, ${mainColor})`}
         p={3}
         cursor="pointer"
-        transition="opacity .4s"
-        opacity={id ? 1 : 0}
       >
         {arrow && (
           <Box
@@ -74,26 +75,45 @@ export const EvolutionCard: React.FC<EvoCardProps> = ({ url, arrow }) => {
             </Box>
           </Box>
         )}
-        <Flex
-          flexDir="column"
+        <Stack
+          spacing={2}
           color={chroma(mainColor).darken().hex()}
           transition="color .4s"
           _groupHover={{ color: chroma(mainColor).darken(3).hex() }}
         >
-          <Heading
-            as="h1"
-            size="xl"
-            fontWeight="normal"
-            textTransform="capitalize"
-          >
-            {name}
-          </Heading>
-          {id && (
-            <Heading as="h3" size="2xl" ml={1}>
-              #{number}
+          <Skeleton isLoaded={!!id} w="80%">
+            <Heading
+              as="h1"
+              size="xl"
+              fontWeight="normal"
+              textTransform="capitalize"
+            >
+              {name}
             </Heading>
-          )}
-        </Flex>
+          </Skeleton>
+          <Skeleton isLoaded={!!id} minW="80px" h="40px">
+            {id && (
+              <Heading as="h3" size="2xl" ml={1}>
+                #{number}
+              </Heading>
+            )}
+          </Skeleton>
+          <Stack isInline spacing={2} h={5} mb={2}>
+            {formattedTypes
+              ? formattedTypes.map((type) => (
+                  <PokemonType key={type} type={type} />
+                ))
+              : new Array(2)
+                  .fill(true)
+                  .map((_, index) => (
+                    <Skeleton
+                      key={`skeleton-${index}`}
+                      boxShadow="md"
+                      width="46px"
+                    />
+                  ))}
+          </Stack>
+        </Stack>
         <Box
           position="absolute"
           bottom={0}
@@ -102,13 +122,21 @@ export const EvolutionCard: React.FC<EvoCardProps> = ({ url, arrow }) => {
           transition="transform .4s"
           _groupHover={{ transform: 'scale(1.1)' }}
         >
-          {sprites && (
+          {sprites?.front_default ? (
             <Image
               src={sprites?.front_default}
               width={116}
               height={116}
               quality={100}
             />
+          ) : (
+            <Flex boxSize={116} alignItems="center" justifyContent="center">
+              <Spinner
+                size="lg"
+                thickness="4px"
+                color={chroma(mainColor).brighten().css()}
+              />
+            </Flex>
           )}
         </Box>
       </Box>
