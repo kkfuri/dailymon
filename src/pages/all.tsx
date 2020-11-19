@@ -6,12 +6,13 @@ import { useInfiniteQuery } from 'react-query'
 
 import { Pokecard } from 'src/components/pokeCard/pokeCard'
 import api from 'src/utils/api'
+import useInfiniteScroll from 'src/hooks/useInfiniteScroll'
 
 const fetchPokemons = (key, cursor = 0) =>
   api.get(`pokemon?limit=21&offset=${cursor}`)
 
 export default function All() {
-  const { data, fetchMore, canFetchMore, isFetchingMore } = useInfiniteQuery(
+  const { data, fetchMore, isFetchingMore } = useInfiniteQuery(
     'allPokemons',
     fetchPokemons,
     {
@@ -19,6 +20,9 @@ export default function All() {
         data.next.split('offset=')[1].split('&limit=')[0],
     }
   )
+
+  useInfiniteScroll(fetchMore)
+
   return (
     <>
       <Head>
@@ -31,6 +35,7 @@ export default function All() {
           maxW={1240}
           mx="auto"
           py={6}
+          minH="100vh"
         >
           {data &&
             data.map(({ data: group }) =>
@@ -38,7 +43,11 @@ export default function All() {
             )}
         </SimpleGrid>
         <Box mx="auto">
-          <Button onClick={() => fetchMore()} isLoading={!!isFetchingMore}>
+          <Button
+            onClick={() => fetchMore()}
+            size="lg"
+            isLoading={!!isFetchingMore}
+          >
             See more <Icon as={FiPlus} ml={2} />
           </Button>
         </Box>
