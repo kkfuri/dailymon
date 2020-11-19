@@ -36,7 +36,7 @@ export const FeaturedPoke: React.FC<PokemonAttrs> = ({
       ? chroma.average(formattedTypes.map((i) => colorByType[i]))
       : mainColor
   return (
-    <Flex flexDir="column">
+    <Flex flexDir="column" minH={390}>
       <Stack
         spacing={4}
         mb={4}
@@ -149,16 +149,20 @@ export const FeaturedPoke: React.FC<PokemonAttrs> = ({
           />
           <Stats
             title="Stats"
-            list={stats.map((i) => ({
-              title: i.stat.name,
-              value: i.base_stat,
-            }))}
+            list={
+              stats
+                ? stats.map((i) => ({
+                    title: i.stat.name,
+                    value: i.base_stat,
+                  }))
+                : []
+            }
             color={mainColor}
             IconAs={CgPokemon}
           />
         </Stack>
       </Stack>
-      <Evolutions url={species.url} />
+      {species && <Evolutions url={species.url} />}
     </Flex>
   )
 }
