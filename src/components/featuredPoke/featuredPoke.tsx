@@ -30,7 +30,7 @@ export const FeaturedPoke: React.FC<PokemonAttrs> = ({
 }) => {
   const number = id ? id.toString().padStart(3, '0') : null
   const formattedTypes = types?.map((i) => i.type.name)
-  const mainColor = colorByType[formattedTypes?.[0]] || 'white'
+  const mainColor = colorByType[formattedTypes?.[0]] || 'gray'
   const avgColor =
     formattedTypes?.length > 1
       ? chroma.average(formattedTypes.map((i) => colorByType[i]))
