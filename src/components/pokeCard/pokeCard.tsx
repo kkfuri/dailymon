@@ -13,9 +13,7 @@ async function getPokemon(url: string): Promise<PokemonAttrs> {
 }
 
 export const Pokecard = ({ url, name }) => {
-  const { data, isLoading } = useQuery<PokemonAttrs, Error>(name, () =>
-    getPokemon(url)
-  )
+  const { data } = useQuery<PokemonAttrs, Error>(name, () => getPokemon(url))
 
   const { id, types, sprites } = data || {}
   const number = id ? id.toString().padStart(3, '0') : null
@@ -57,7 +55,7 @@ export const Pokecard = ({ url, name }) => {
       >
         <Stack isInline spacing={2}>
           {formattedTypes?.map((type) => (
-            <PokemonType type={type} />
+            <PokemonType key={type} type={type} />
           ))}
         </Stack>
         <Flex

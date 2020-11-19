@@ -44,7 +44,7 @@ export default function All() {
           >
             {data &&
               data.map(({ data: group }) =>
-                group.results.map((i) => <Pokecard {...i} />)
+                group.results.map((i) => <Pokecard key={i.name} {...i} />)
               )}
           </SimpleGrid>
           <Box mx="auto">

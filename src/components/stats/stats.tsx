@@ -33,7 +33,7 @@ export const Stats: React.FC<StatsProps> = ({ color, title, IconAs, list }) => {
         .brighten()
         .css()}, ${color})`}
       borderRadius={12}
-      p={2}
+      p={{ base: 4, md: 2 }}
       h="full"
     >
       <Flex
@@ -59,7 +59,7 @@ export const Stats: React.FC<StatsProps> = ({ color, title, IconAs, list }) => {
       </Flex>
       <Stack spacing={0}>
         {list.map(({ title, value }) => (
-          <ContrastText color={color}>
+          <ContrastText key={title} color={color}>
             {title} <strong>{value}</strong>
           </ContrastText>
         ))}

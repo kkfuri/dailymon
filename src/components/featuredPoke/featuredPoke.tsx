@@ -47,7 +47,7 @@ export const FeaturedPoke: React.FC<PokemonAttrs> = ({
           position="relative"
           role="group"
           h={390}
-          w={{ base: 'full', lg: 480 }}
+          w="full"
           {...backgroundWithImage(
             mainColor,
             avgColor,
@@ -63,6 +63,7 @@ export const FeaturedPoke: React.FC<PokemonAttrs> = ({
           <Stack isInline spacing={2} position="absolute">
             {formattedTypes?.map((type) => (
               <Box
+                key={type}
                 color={colorByType[type]}
                 bg={chroma(colorByType[type]).brighten().hex()}
                 borderRadius={4}
@@ -135,7 +136,7 @@ export const FeaturedPoke: React.FC<PokemonAttrs> = ({
             )}
           </Box>
         </Box>
-        <Stack spacing={4} direction={{ base: 'row', md: 'column' }}>
+        <Stack spacing={4} w="full" maxW={{ md: 180 }}>
           <Stats
             title="Pokédex data"
             list={[
