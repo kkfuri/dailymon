@@ -1,6 +1,6 @@
 import { SimpleGrid } from '@chakra-ui/react'
 import Axios from 'axios'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { EvolutionCard } from '../evoCard/evoCard'
 
@@ -13,8 +13,9 @@ const getEvolutions = async (url: string): Promise<EvolutionChainType> => {
 
 export const Evolutions = ({ url }) => {
   const { data } = useQuery<EvolutionChainType, Error>(url, getEvolutions, {})
+  const [chain, setChain] = useState(new Array(3).fill(true))
 
-  const possibleEvos = useMemo(() => {
+  const possibleEvos = useMemo(async () => {
     if (!data?.chain) return null
     let realChain = [data?.chain?.species]
     let actualChain = data?.chain
@@ -29,19 +30,19 @@ export const Evolutions = ({ url }) => {
       actualChain = actualChain.evolves_to[0]
     } while (actualChain && actualChain.hasOwnProperty('evolves_to'))
 
-    return realChain
+    setChain(realChain)
   }, [data?.chain])
 
   return (
     <SimpleGrid
-      hidden={possibleEvos?.length === 1}
+      hidden={chain?.length === 1}
       columns={{
         base: 1,
-        md: possibleEvos?.length > 3 ? 3 : possibleEvos?.length,
+        md: chain?.length > 3 ? 3 : chain?.length,
       }}
       spacing={4}
     >
-      {possibleEvos?.map((evo, i) => (
+      {chain?.map((evo, i) => (
         <EvolutionCard key={evo.name} {...evo} arrow={i % 3 !== 0} />
       ))}
     </SimpleGrid>
