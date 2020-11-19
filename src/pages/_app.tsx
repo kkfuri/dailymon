@@ -6,6 +6,7 @@ import {
 import { ChakraProvider } from '@chakra-ui/react'
 
 import theme from 'src/utils/theme'
+import { Layout } from 'src/components/layout/layout'
 
 const queryCache = new QueryCache()
 
@@ -20,7 +21,9 @@ function MyApp({ Component, pageProps }) {
     <ReactQueryConfigProvider config={overrides}>
       <ReactQueryCacheProvider queryCache={queryCache}>
         <ChakraProvider theme={theme}>
-          <Component {...pageProps} />
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
         </ChakraProvider>
       </ReactQueryCacheProvider>
     </ReactQueryConfigProvider>
