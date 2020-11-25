@@ -35,7 +35,7 @@ export const Evolutions = ({ url }) => {
 
   return (
     <SimpleGrid
-      hidden={chain?.length === 1}
+      hidden={chain?.length === 1 || !data}
       columns={{
         base: 1,
         md: chain?.length > 3 ? 3 : chain?.length,
