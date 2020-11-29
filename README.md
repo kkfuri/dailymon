@@ -37,6 +37,6 @@ The main tecnology used in this project is [Next.js](https://nextjs.org/).
 # :closed_book: License
 
 Released in 2020.
-This project is under the [MIT license](https://github.com/kkfuri/dailymon/blob/master/LICENSE).
+This project is under the [MIT license](https://github.com/kkfuri/dailymon/blob/main/LICENSE).
 
 Made by [Diego](https://github.com/kkfuri)
