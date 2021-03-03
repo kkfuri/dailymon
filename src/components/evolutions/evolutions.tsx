@@ -43,7 +43,7 @@ export const Evolutions = ({ url }) => {
       spacing={4}
     >
       {chain?.map((evo, i) => (
-        <EvolutionCard key={evo.name} {...evo} arrow={i % 3 !== 0} />
+        <EvolutionCard key={evo.name || i} {...evo} arrow={i % 3 !== 0} />
       ))}
     </SimpleGrid>
   )
