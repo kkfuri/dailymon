@@ -1,10 +1,11 @@
 import { Box } from '@chakra-ui/react'
 import Head from 'next/head'
-import random from 'lodash.random'
 import Axios from 'axios'
 
 import { FeaturedPoke } from 'src/components/featuredPoke/featuredPoke'
 import api from 'src/utils/api'
+import { generateMonthlyPokedex, generateDailyPokemon, getHistory } from 'src/utils/history'
+import { today } from 'src/utils/date'
 
 export default function Home({ pokemon }) {
   return (
@@ -20,13 +21,24 @@ export default function Home({ pokemon }) {
 }
 
 export async function getStaticProps(ctx) {
-  const id = random(880)
+  if(new Date().getDate() === 1) {
+    generateMonthlyPokedex()
+  }
+
+  let id = getHistory()[today()]
+
+  if(!id) {
+    generateDailyPokemon()
+    id = getHistory()[today()]
+  }
+
   const pokemon = await api
     .get(`/pokemon?limit=1&offset=${id}`)
     .then(
       async (res) =>
         await Axios.get(res.data.results?.pop().url).then(({ data }) => data)
     )
+
   return {
     props: { pokemon },
   }
