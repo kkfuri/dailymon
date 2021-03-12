@@ -1,14 +1,15 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Box, Button, Flex, SimpleGrid, Stack } from '@chakra-ui/react'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
 import { useQuery } from 'react-query'
 import chroma from 'chroma-js'
 
-import { Pokecard } from 'src/components/pokeCard/pokeCard'
-import api from 'src/utils/api'
-import { colorByType, idByType } from 'src/utils/constants'
-import useInfiniteScroll from 'src/hooks/useInfiniteScroll'
-import { useRouter } from 'next/router'
+import api from '@/utils/api'
+import { idByType } from '@/utils/constants'
+import { generateMainColor } from '@/utils/colors'
+import { PokemonCard } from '@/components'
+import useInfiniteScroll from '@/hooks/useInfiniteScroll'
 
 const getPokemon = async (id: string) => {
   return await api.get(`/type/${id}`).then((res) => res.data)
@@ -49,10 +50,11 @@ export default function All() {
         >
           <Box position="sticky" h="full" top="30%">
             <SimpleGrid columns={2} gap={4} w={220}>
-              {Object.keys(idByType).map((mapType) => {
-                const color = colorByType[mapType]
+              {Object.keys(idByType).map((mapType, index) => {
+                const color = generateMainColor(mapType)
                 return (
                   <Button
+                    key={index}
                     border="1px solid red"
                     borderColor={chroma(color).brighten().hex()}
                     color={
@@ -77,9 +79,9 @@ export default function All() {
               })}
             </SimpleGrid>
           </Box>
-          <SimpleGrid columns={{ base: 1, md: 2, xl: 3 }} spacing={6} flex={1}>
+          <SimpleGrid columns={{ base: 1, sm: 2, lg: 3 }} spacing={6} flex={1}>
             {paginatedPokemon?.map((i) => (
-              <Pokecard key={i.pokemon.name} {...i.pokemon} />
+              <PokemonCard key={i.pokemon.name} {...i.pokemon} />
             ))}
           </SimpleGrid>
         </Stack>

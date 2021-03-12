@@ -1,43 +1,23 @@
+import dayjs from 'dayjs'
 import fs from 'fs'
 import path from 'path'
-import random from 'lodash.random'
 
-import { MAX_POKEMONS } from './constants'
-import { daysInMonth } from './date'
-
-export function generateMonthlyPokedex() {
-  for (let i = 1; i <= daysInMonth(new Date().getMonth() + 1); i++) {
-    const date = new Date()
-      .toDateString()
-      .replace(new Date().getUTCDate().toString().padStart(2, '0'), String(i))
-    const id = random(MAX_POKEMONS)
-    saveToHistory(id + 1, date)
-  }
-}
-
-export function generateDailyPokemon() {
-  const id = random(MAX_POKEMONS)
-  saveToHistory(id + 1)
-}
-
-export function saveToHistory(pokemonId: number, date?: string) {
-  const history = getHistory()
-  const dateToSave = (date ? new Date(date) : new Date()).toLocaleDateString()
-
-  history[dateToSave] = pokemonId
-
-  const stringifiedHistory = JSON.stringify(history)
-
-  const filePath = path.resolve('src', 'utils', 'history.json')
-  fs.writeFileSync(filePath, stringifiedHistory)
-}
-
-export function getHistory() {
+export function getHistory(year, month) {
   const fileContent = fs.readFileSync(
-    path.resolve('src', 'utils', 'history.json'),
+    path.resolve('src', 'data', String(year), [month, 'json'].join('.')),
     'utf8'
   )
   if (!fileContent) return {}
 
   return JSON.parse(fileContent)
+}
+
+export function getThreeDayRangePokemons() {
+  const today = dayjs()
+  const tomorrow = today.add(1, 'day')
+  const yesterday = today.subtract(1, 'day')
+  const range =  [today, tomorrow, yesterday]
+  const pokemonForRange = range.map(date => getHistory(date.year(), date.month() + 1)[date.date()])
+
+  return pokemonForRange
 }

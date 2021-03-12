@@ -5,8 +5,8 @@ import {
 } from 'react-query'
 import { ChakraProvider } from '@chakra-ui/react'
 
-import theme from 'src/utils/theme'
-import { Layout } from 'src/components/layout/layout'
+import theme from '@/utils/theme'
+import { Layout } from '@/components'
 
 const queryCache = new QueryCache()
 

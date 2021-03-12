@@ -1,5 +1,6 @@
 import { Flex } from '@chakra-ui/react'
-import { Nav } from '../nav/nav'
+
+import { Nav } from '@/components'
 
 export const Layout = ({ children }) => {
   return (
