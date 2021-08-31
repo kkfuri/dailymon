@@ -2,7 +2,7 @@ import NextLink from 'next/link'
 import { Box, Link, Stack } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 
-import { Logo } from 'src/components/logo/logo'
+import { Logo } from '@/components'
 
 const links = [
   {
@@ -24,7 +24,7 @@ const Nav = () => {
       </Box>
       <Stack spacing={4} isInline justify="center">
         {links.map(({ path, label }) => (
-          <NextLink href={path} passHref>
+          <NextLink key={path} href={path} passHref>
             <Link
               aria-current={router.pathname === path}
               color={router.pathname === path ? 'gray.400' : 'white'}

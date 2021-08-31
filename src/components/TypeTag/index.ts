@@ -1,0 +1,1 @@
+export { TypeTag } from './TypeTag'

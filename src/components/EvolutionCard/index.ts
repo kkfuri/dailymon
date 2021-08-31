@@ -1,0 +1,1 @@
+export { EvolutionCard } from './EvolutionCard'

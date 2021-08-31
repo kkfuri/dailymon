@@ -1,10 +1,9 @@
 import { extendTheme } from '@chakra-ui/react'
 
-// 2. Call `extendTheme` and pass your custom values
 const theme = extendTheme({
   fonts: {
-    body: 'pt sans, sans-serif',
-    heading: 'pt sans, sans-serif',
+    body: '"PT Sans Caption", sans-serif',
+    heading: '"DotGothic16", sans-serif',
   },
   styles: {
     global: {
