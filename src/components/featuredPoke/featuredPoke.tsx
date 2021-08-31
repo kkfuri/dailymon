@@ -7,15 +7,15 @@ import { Box, Flex, Heading, Stack } from '@chakra-ui/react'
 import { colorByType } from 'src/utils/constants'
 import { Stats } from '../stats/stats'
 import { Evolutions } from '../evolutions/evolutions'
+import { PokemonType } from '../pokemonType/pokemonType'
 
 const backgroundWithImage = (color, avgColor, image) => ({
   backgroundImage: `url(${image}), linear-gradient(150deg, ${chroma(avgColor)
-    .brighten(0.8)
+    .brighten(0.6)
     .css()}, ${color})`,
   backgroundRepeat: 'no-repeat',
   backgroundPosition: 'center ,center',
-  backgroundSize: '320px, cover',
-  backgroundBlendMode: 'hard-light',
+  backgroundSize: '240px, cover',
 })
 
 export const FeaturedPoke: React.FC<PokemonAttrs> = ({
@@ -57,32 +57,20 @@ export const FeaturedPoke: React.FC<PokemonAttrs> = ({
           p={3}
           transition="background-size .4s"
           _hover={{
-            backgroundSize: '420px, cover',
+            backgroundSize: '320px, cover',
           }}
         >
-          <Stack isInline spacing={2} position="absolute">
+          <Stack isInline spacing={2} position="absolute" zIndex={10}>
             {formattedTypes?.map((type) => (
-              <Box
-                key={type}
-                color={colorByType[type]}
-                bg={chroma(colorByType[type]).brighten().hex()}
-                borderRadius={4}
-                boxShadow="sm"
-                px={2}
-                fontWeight="bold"
-                fontSize="xs"
-                textTransform="uppercase"
-              >
-                {type}
-              </Box>
+              <PokemonType type={type} />
             ))}
           </Stack>
           <Box
             textAlign="center"
             color={
               chroma.contrast('white', mainColor) > 4.5
-                ? chroma(mainColor).brighten(2).css()
-                : chroma(mainColor).darken(2).css()
+                ? chroma(mainColor).brighten(1.6).css()
+                : chroma(mainColor).darken(1.6).css()
             }
             transition="color .4s"
             _groupHover={{
@@ -119,20 +107,18 @@ export const FeaturedPoke: React.FC<PokemonAttrs> = ({
           <Box
             position="absolute"
             top={-8}
-            right={-10}
+            right={-8}
             zIndex={10}
             transition="transform .4s"
             _groupHover={{ transform: 'scale(1.1)' }}
           >
             {sprites && (
-              <>
-                <Image
-                  src={sprites?.front_default}
-                  width={116}
-                  height={116}
-                  quality={100}
-                />
-              </>
+              <Image
+                src={sprites?.front_default}
+                width={116}
+                height={116}
+                quality={100}
+              />
             )}
           </Box>
         </Box>
