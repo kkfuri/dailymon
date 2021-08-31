@@ -6,6 +6,10 @@ import { Logo } from '@/components'
 
 const links = [
   {
+    path: '/past',
+    label: "Past pokemon",
+  },
+  {
     path: '/',
     label: "Today's pokemon",
   },
@@ -27,7 +31,7 @@ const Nav = () => {
           <NextLink key={path} href={path} passHref>
             <Link
               aria-current={router.pathname === path}
-              color={router.pathname === path ? 'gray.400' : 'white'}
+              color={router.pathname === path ? 'blue.200' : 'white'}
               textTransform="uppercase"
               letterSpacing="wide"
             >
