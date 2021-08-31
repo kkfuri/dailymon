@@ -1,1 +1,1 @@
-export { Stats } from './Stats'
+export { Stats } from './stats'
