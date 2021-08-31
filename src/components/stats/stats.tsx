@@ -32,7 +32,7 @@ export const Stats: React.FC<StatsProps> = ({ color, title, IconAs, list }) => {
       bg={`linear-gradient(300deg, ${chroma(color)
         .brighten()
         .css()}, ${color})`}
-      borderRadius={12}
+      borderRadius={6}
       p={{ base: 4, md: 2 }}
       h="full"
     >
@@ -43,6 +43,7 @@ export const Stats: React.FC<StatsProps> = ({ color, title, IconAs, list }) => {
             ? chroma(color).brighten(3).css()
             : chroma(color).darken(3).css()
         }
+        transition="color .4s"
       >
         {IconAs && (
           <Flex alignItems="center" justifyContent="center" boxSize={8}>
@@ -51,7 +52,6 @@ export const Stats: React.FC<StatsProps> = ({ color, title, IconAs, list }) => {
               mr={1}
               boxSize={6}
               transition=".3s"
-              _groupHover={{ boxSize: 8 }}
             />
           </Flex>
         )}
