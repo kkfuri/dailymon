@@ -4,7 +4,7 @@ import random from 'lodash.random'
 import { colorByType } from '@/utils/constants'
 
 type generateMainColorType = (
-  types: string[] | string,
+  types?: string[] | string,
   opts?: { randomDefault?: boolean }
 ) => string
 type generateAverageColorType = (types: string[]) => string
@@ -12,7 +12,7 @@ type generateAverageColorType = (types: string[]) => string
 export const generateMainColor: generateMainColorType = function (types, opts) {
   let placeholderColor = 'gray'
   if (opts?.randomDefault) {
-    placeholderColor = Object.keys(colorByType)[
+    placeholderColor = Object.values(colorByType)[
       random(Object.keys(colorByType).length - 1)
     ]
   }
