@@ -32,10 +32,11 @@ export const FeaturedPokemon: React.FC<PokemonAttrs> = ({
   const avgColor = generateAverageColor(formattedTypes)
 
   return (
-    <Flex flexDir="column" minH={390}>
+    <Flex flexDir="column" minH={390} w="full">
       <Stack
         spacing={4}
         mb={4}
+        w="full"
         direction={{ base: 'column', md: 'row' }}
         alignItems={{ xs: 'center', md: 'unset' }}
       >
@@ -76,17 +77,16 @@ export const FeaturedPokemon: React.FC<PokemonAttrs> = ({
                   : chroma(mainColor).darken(3).css(),
             }}
           >
-            {id && (
-              <Heading as="h3" fontSize={{ base: '48px', md: '80px' }} ml={1}>
-                #{number}
-              </Heading>
-            )}
+            <Heading as="h3" fontSize={{ base: '48px', md: '80px' }} ml={1}>
+              #{number ?? '~~~'}
+            </Heading>
             <Heading
               as="h1"
               position="absolute"
               borderRadius="0 0 12px 12px"
               inset={0}
               top="auto"
+              minH="100px"
               fontSize={{ base: '36px', md: '60px' }}
               fontWeight="normal"
               textTransform="capitalize"
@@ -124,9 +124,9 @@ export const FeaturedPokemon: React.FC<PokemonAttrs> = ({
           <Stats
             title="Pokédex data"
             list={[
-              { title: 'nº.', value: number },
-              { title: 'Height', value: `${height / 10}m` },
-              { title: 'Weight', value: `${weight / 10}kg` },
+              { title: 'nº.', value: number ?? '?' },
+              { title: 'Height', value: height ? `${height / 10}m` : '?' },
+              { title: 'Weight', value: weight ? `${weight / 10}kg` : '?' },
             ]}
             color={mainColor}
             IconAs={AiOutlineNumber}
@@ -136,9 +136,9 @@ export const FeaturedPokemon: React.FC<PokemonAttrs> = ({
             list={
               stats
                 ? stats.map((i) => ({
-                    title: i.stat.name,
-                    value: i.base_stat,
-                  }))
+                  title: i.stat.name,
+                  value: i.base_stat,
+                }))
                 : []
             }
             color={mainColor}
