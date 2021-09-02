@@ -12,14 +12,9 @@ export default function Home({ dailymon, yesterdaymon, tomorrowmon }) {
       <Head>
         <title>Dailymon - every day a new pokemon</title>
       </Head>
-      <SimpleGrid columns={{ base: 1, '2xl': 3 }} spacing="40px">
-        <Box display={{ base: 'none', '2xl': 'block' }} />
-        <Box mx="auto" w={{ base: '80%', md: 'full' }} maxW={720} py={6}>
-          {dailymon && <FeaturedPokemon {...dailymon} />}
-        </Box>
-        <Box mx="auto" w="100%" maxW={720} py={6} />
-          {/* {tomorrowmon && <WhosThatPokemon {...tomorrowmon} />} */}
-      </SimpleGrid>
+      <Box mx="auto" w={{ base: '80%', md: 'full' }} maxW={720} py={6}>
+        {dailymon && <FeaturedPokemon {...dailymon} />}
+      </Box>
     </>
   )
 }
