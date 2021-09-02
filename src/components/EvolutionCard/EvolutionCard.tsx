@@ -35,6 +35,11 @@ export const EvolutionCard: React.FC<EvoCardProps> = ({ name, url, arrow }) => {
   const mainColor = generateMainColor(formattedTypes)
   const avgColor = generateAverageColor(formattedTypes)
 
+  const backgroundImage = `url(${sprites?.other?.['official-artwork']?.front_default})`
+  const backgroundColor = `linear-gradient(150deg, ${chroma(avgColor)
+    .brighten(0.8)
+    .css()}, ${mainColor})`
+
   return (
     <NextLink href={id ? `/${id}` : '/'} passHref>
       <Box
@@ -45,9 +50,11 @@ export const EvolutionCard: React.FC<EvoCardProps> = ({ name, url, arrow }) => {
         minH={130}
         w="full"
         borderRadius={12}
-        background={`linear-gradient(150deg, ${chroma(avgColor)
-          .brighten(0.8)
-          .css()}, ${mainColor})`}
+        background={[backgroundImage, backgroundColor].join(', ')}
+        backgroundRepeat="no-repeat"
+        backgroundPosition="80% 40%, center"
+        backgroundSize="200px, cover"
+        backgroundBlendMode="luminosity"
         p={3}
         cursor="pointer"
       >
@@ -99,17 +106,17 @@ export const EvolutionCard: React.FC<EvoCardProps> = ({ name, url, arrow }) => {
           <Stack isInline spacing={2} h={5} mb={2}>
             {formattedTypes
               ? formattedTypes.map((type) => (
-                  <TypeTag key={type} type={type} />
-                ))
+                <TypeTag key={type} type={type} />
+              ))
               : new Array(2)
-                  .fill(true)
-                  .map((_, index) => (
-                    <Skeleton
-                      key={`skeleton-${index}`}
-                      boxShadow="md"
-                      width="46px"
-                    />
-                  ))}
+                .fill(true)
+                .map((_, index) => (
+                  <Skeleton
+                    key={`skeleton-${index}`}
+                    boxShadow="md"
+                    width="46px"
+                  />
+                ))}
           </Stack>
         </Stack>
         <Box
@@ -118,7 +125,8 @@ export const EvolutionCard: React.FC<EvoCardProps> = ({ name, url, arrow }) => {
           right={-5}
           zIndex={10}
           transition="transform .4s"
-          _groupHover={{ transform: 'scale(1.1)' }}
+          _groupHover={{ transform: 'scale(-1.2, 1.2)' }}
+          transform="scaleX(-1)"
         >
           {sprites?.front_default ? (
             <Image
