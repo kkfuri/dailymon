@@ -29,7 +29,7 @@ export default function All() {
       </Head>
       <Flex flexDir="column" my={12}>
         <SimpleGrid
-          columns={{ base: 1, md: 2, '2xl': 3 }}
+          columns={{ base: 1, md: 2, xl: 3 }}
           spacing={6}
           maxW={1240}
           mx="auto"
