@@ -45,8 +45,9 @@ export const CalendarCard = ({ id: pokeId, date, hide }: CalendarCardProps) => {
         position="relative"
         role="group"
         w="100%"
-        maxW={195}
+        maxW={{ base: 280, md: 195 }}
         h={180}
+        mx="auto"
         backgroundImage={[backgroundImage, backgroundColor].join(', ')}
         backgroundRepeat="no-repeat"
         backgroundPosition="80% 20%, center"
@@ -71,8 +72,8 @@ export const CalendarCard = ({ id: pokeId, date, hide }: CalendarCardProps) => {
             direction="column"
             alignItems="center"
             h="72px"
-            mt={2}
-            ml={6}
+            mt={{ base: 3, md: 2 }}
+            ml={{ base: 0, md: 6 }}
             color={chroma(mainColor).darken().hex()}
             transition="color .4s"
             _groupHover={{
@@ -80,7 +81,7 @@ export const CalendarCard = ({ id: pokeId, date, hide }: CalendarCardProps) => {
             }}
           >
             {hide ? (
-              <Heading size="3xl" position="absolute" left="45%" top="40%" zIndex={10}>
+              <Heading size="3xl" position="absolute" left={{ base: null, md: "45%" }} top="40%" zIndex={10}>
                 ?
               </Heading>
             ) : (
@@ -109,7 +110,7 @@ export const CalendarCard = ({ id: pokeId, date, hide }: CalendarCardProps) => {
         <Box
           position="absolute"
           top={20}
-          left={2}
+          left={{ base: 10, md: 2 }}
           zIndex={10}
           transition="transform .4s"
           pointerEvents="none"

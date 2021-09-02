@@ -59,7 +59,7 @@ export default function Past({ pastPokemons }) {
             </Button>
           ))}
         </SimpleGrid>
-        <Flex justifyContent="center" alignItems="center">
+        <Flex justifyContent="center" alignItems="center" px={{ base: 4, md: 0 }}>
           <Button
             onClick={handlePastMonth}
             isDisabled={month === 1 && year === years[0]}
@@ -100,6 +100,7 @@ export default function Past({ pastPokemons }) {
           maxW={1240}
           w="100%"
           mx="auto"
+          px={{ base: 4, md: 0 }}
           py={6}
         >
           {Object.keys(pokemons).map((key) => (
