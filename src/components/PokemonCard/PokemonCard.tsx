@@ -35,11 +35,10 @@ export const PokemonCard = ({ url, name }) => {
         w={340}
         maxW="full"
         borderRadius={12}
-        backgroundImage={`url(${
-          sprites?.other?.['official-artwork']?.front_default
-        }), linear-gradient(150deg, ${chroma(avgColor)
-          .brighten(0.8)
-          .css()}, ${mainColor})`}
+        backgroundImage={`url(${sprites?.other?.['official-artwork']?.front_default
+          }), linear-gradient(150deg, ${chroma(avgColor)
+            .brighten(0.8)
+            .css()}, ${mainColor})`}
         backgroundRepeat="no-repeat"
         backgroundPosition="110% 30%,center"
         backgroundSize="200px, cover"
@@ -50,16 +49,16 @@ export const PokemonCard = ({ url, name }) => {
           {formattedTypes
             ? formattedTypes.map((type) => <TypeTag key={type} type={type} />)
             : new Array(2)
-                .fill(true)
-                .map((_, index) => (
-                  <Skeleton
-                    key={`skeleton-${index}`}
-                    boxShadow="md"
-                    startColor={mainColor}
-                    endColor={chroma(mainColor).brighten().css()}
-                    width="48px"
-                  />
-                ))}
+              .fill(true)
+              .map((_, index) => (
+                <Skeleton
+                  key={`skeleton-${index}`}
+                  boxShadow="md"
+                  startColor={mainColor}
+                  endColor={chroma(mainColor).brighten().css()}
+                  width="48px"
+                />
+              ))}
         </Stack>
         <Skeleton
           isLoaded={!!id}
