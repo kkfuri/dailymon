@@ -39,7 +39,7 @@ export const CalendarCard = ({ id: pokeId, date, hide }: CalendarCardProps) => {
   const backgroundColor = `linear-gradient(150deg, ${chroma(avgColor).brighten(2).css()}, ${chroma(mainColor).brighten().css()})`
 
   return (
-    <Link href={id ? `/${id}` : '/'} passHref>
+    <Link href={hide ? '/past' : `/${id}`} passHref={!hide} scroll={!hide}>
       <Box
         as="a"
         position="relative"
@@ -116,7 +116,7 @@ export const CalendarCard = ({ id: pokeId, date, hide }: CalendarCardProps) => {
           _groupHover={!hide && { transform: 'scale(1.1)' }}
           filter={hide && 'blur(12px)'}
         >
-          {sprites?.front_default && (
+          {!hide && sprites?.front_default && (
             <Image
               src={sprites?.front_default}
               width={88}
@@ -125,7 +125,7 @@ export const CalendarCard = ({ id: pokeId, date, hide }: CalendarCardProps) => {
             />
           )}
 
-          {!id && (
+          {!hide && !id && (
             <Flex boxSize={116} alignItems="center" justifyContent="center">
               <Spinner
                 size="lg"
@@ -136,7 +136,7 @@ export const CalendarCard = ({ id: pokeId, date, hide }: CalendarCardProps) => {
           )}
         </Box>
         {hide ? (
-          <Text textAlign="center" color={chroma(mainColor).darken(2).hex()}>
+          <Text textAlign="center" fontWeight="bold" letterSpacing={-0.2} color={chroma(mainColor).darken(2).hex()}>
             {dayjs(dayjs()).to(date)}
           </Text>
         ) : (
