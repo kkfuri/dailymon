@@ -54,7 +54,7 @@ export const EvolutionCard: React.FC<EvoCardProps> = ({ name, url, arrow }) => {
         backgroundRepeat="no-repeat"
         backgroundPosition="80% 40%, center"
         backgroundSize="200px, cover"
-        backgroundBlendMode="luminosity"
+        backgroundBlendMode="overlay"
         p={3}
         cursor="pointer"
       >
@@ -88,8 +88,7 @@ export const EvolutionCard: React.FC<EvoCardProps> = ({ name, url, arrow }) => {
           <Skeleton isLoaded={!!id} w="80%">
             <Heading
               as="h1"
-              fontSize={{ base: 20, xl: 28 }}
-              fontWeight="normal"
+              fontSize={{ base: 28, xl: 32 }}
               textTransform="capitalize"
               isTruncated
             >
@@ -98,7 +97,7 @@ export const EvolutionCard: React.FC<EvoCardProps> = ({ name, url, arrow }) => {
           </Skeleton>
           <Skeleton isLoaded={!!id} minW="80px" h="40px">
             {id && (
-              <Heading as="h3" fontSize={{ base: 24, xl: 32 }} lineHeight={1} ml={1}>
+              <Heading as="h3" fontWeight="normal" fontSize={{ base: 24, xl: 28 }} lineHeight={1} ml={1}>
                 #{number}
               </Heading>
             )}
