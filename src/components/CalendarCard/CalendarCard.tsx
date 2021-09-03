@@ -25,7 +25,7 @@ interface CalendarCardProps {
 }
 
 export const CalendarCard = ({ id: pokeId, date, hide }: CalendarCardProps) => {
-  const { data } = useQuery<PokemonAttrs, Error>(pokeId, () => getPokemon(pokeId), { enabled: !hide })
+  const { data } = useQuery<PokemonAttrs, Error>(pokeId, () => getPokemon(pokeId), { enabled: !hide && pokeId })
 
   const { id, name, types, sprites } = data || {}
   const number = id ? id.toString().padStart(3, '0') : null
