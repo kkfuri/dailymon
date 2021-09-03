@@ -14,7 +14,8 @@ async function getPokemon(url: string): Promise<PokemonAttrs> {
 }
 
 export const PokemonCard = ({ url, name }) => {
-  const { data } = useQuery<PokemonAttrs, Error>(name, () => getPokemon(url))
+  const pokeId = url.split('/pokemon/')[1].split('/')[0]
+  const { data } = useQuery<PokemonAttrs, Error>(pokeId || url, () => getPokemon(url), { enabled: !!url })
 
   const { id, types, sprites } = data || {}
   const number = id ? id.toString().padStart(3, '0') : null
