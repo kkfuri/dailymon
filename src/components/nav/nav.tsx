@@ -31,7 +31,10 @@ const Nav = () => {
           <NextLink key={path} href={path} passHref>
             <Link
               aria-current={router.pathname === path}
-              color={router.pathname === path ? 'blue.200' : 'white'}
+              color={router.pathname === path ? 'violet.100' : 'white'}
+              _hover={{ color: 'violet.200' }}
+              _focus={{ boxShadow: 'var(--chakra-colors-violet-shadow) 0px 0px 0px 3px' }}
+              px={2}
               textTransform="uppercase"
               letterSpacing="wide"
             >

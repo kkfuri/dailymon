@@ -49,9 +49,18 @@ export default function Past({ pastPokemons }) {
             <Button
               key={possibleYear}
               isActive={possibleYear === year}
+              colorScheme="violet"
+              color="white"
+              letterSpacing="tighter"
+              fontSize="large"
+              border="2px solid transparent"
               _active={{
-                background: 'var(--chakra-colors-blue-400)',
-                color: 'white'
+                color: 'white',
+                border: '2px solid var(--chakra-colors-violet-300)',
+                background: 'transparent',
+              }}
+              _focus={{
+                boxShadow: 'var(--chakra-colors-violet-shadow) 0px 0px 0px 3px'
               }}
               onClick={() => setYear(possibleYear)}
             >
@@ -62,6 +71,11 @@ export default function Past({ pastPokemons }) {
         <Flex justifyContent="center" alignItems="center" px={{ base: 4, md: 0 }}>
           <Button
             onClick={handlePastMonth}
+            colorScheme="violet"
+            color="white"
+            _focus={{
+              boxShadow: 'var(--chakra-colors-violet-shadow) 0px 0px 0px 3px'
+            }}
             isDisabled={month === 1 && year === years[0]}
           >
             <CgArrowLeft style={{ cursor: 'pointer' }} size="2.8rem" />
@@ -78,9 +92,16 @@ export default function Past({ pastPokemons }) {
                 key={possibleMonth}
                 size="sm"
                 isActive={month === possibleMonth}
+                letterSpacing="wider"
+                colorScheme="violet"
+                color="white"
+                border="2px solid transparent"
                 _active={{
-                  background: 'var(--chakra-colors-blue-400)',
-                  color: 'white'
+                  border: '2px solid var(--chakra-colors-violet-300)',
+                  background: 'transparent',
+                }}
+                _focus={{
+                  boxShadow: 'var(--chakra-colors-violet-shadow) 0px 0px 0px 3px'
                 }}
                 onClick={() => setMonth(possibleMonth)}>
                 {dayjs().month(possibleMonth - 1).format('MMMM')}
@@ -89,6 +110,11 @@ export default function Past({ pastPokemons }) {
           </SimpleGrid>
           <Button
             onClick={handleNextMonth}
+            colorScheme="violet"
+            color="white"
+            _focus={{
+              boxShadow: 'var(--chakra-colors-violet-shadow) 0px 0px 0px 3px'
+            }}
             isDisabled={month === 12 && year === years[years.length - 1]}
           >
             <CgArrowRight style={{ cursor: 'pointer' }} size="2.8rem" />
