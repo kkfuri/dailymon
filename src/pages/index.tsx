@@ -24,7 +24,7 @@ export async function getStaticProps(ctx) {
 
   const promiseGen = (date) => {
     return api
-      .get(`/pokemon?limit=1&offset=${date}`)
+      .get(`/pokemon?limit=1&offset=${date - 1}`)
       .then(
         async (res) =>
           await Axios.get(res.data.results?.pop().url).then(({ data }) => data)
