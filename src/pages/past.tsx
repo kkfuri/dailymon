@@ -49,9 +49,11 @@ export default function Past({ pastPokemons }) {
             <Button
               key={possibleYear}
               isActive={possibleYear === year}
+              textTransform="uppercase"
               colorScheme="violet"
               color="white"
               letterSpacing="tighter"
+              fontWeight="300"
               fontSize="large"
               border="2px solid transparent"
               _active={{
@@ -90,8 +92,10 @@ export default function Past({ pastPokemons }) {
             {year && Array.from({ length: 12 }, (_, i) => i + 1).map(possibleMonth => (
               <Button
                 key={possibleMonth}
-                size="sm"
                 isActive={month === possibleMonth}
+                size="sm"
+                fontWeight="300"
+                textTransform="uppercase"
                 letterSpacing="wider"
                 colorScheme="violet"
                 color="white"
