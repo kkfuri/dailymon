@@ -39,3 +39,5 @@ export const idByType = {
   dark: 17,
   fairy: 18,
 }
+
+export const MAX_POKEMONS = 880
