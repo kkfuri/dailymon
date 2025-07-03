@@ -4,9 +4,11 @@ import {
   ReactQueryConfigProvider,
 } from 'react-query'
 import { ChakraProvider } from '@chakra-ui/react'
+import { DefaultSeo } from 'next-seo'
 
 import theme from '@/utils/theme'
 import { Layout } from '@/components'
+import { defaultSEO } from '@/utils/seo'
 
 const queryCache = new QueryCache()
 
@@ -18,15 +20,18 @@ const overrides = {
 
 function MyApp({ Component, pageProps }) {
   return (
-    <ReactQueryConfigProvider config={overrides}>
-      <ReactQueryCacheProvider queryCache={queryCache}>
-        <ChakraProvider theme={theme}>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </ChakraProvider>
-      </ReactQueryCacheProvider>
-    </ReactQueryConfigProvider>
+    <>
+      <DefaultSeo {...defaultSEO} />
+      <ReactQueryConfigProvider config={overrides}>
+        <ReactQueryCacheProvider queryCache={queryCache}>
+          <ChakraProvider theme={theme}>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </ChakraProvider>
+        </ReactQueryCacheProvider>
+      </ReactQueryConfigProvider>
+    </>
   )
 }
 

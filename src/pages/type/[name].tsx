@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Box, Button, Flex, SimpleGrid, Stack } from '@chakra-ui/react'
-import Head from 'next/head'
+import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
-import { useQuery } from 'react-query'
+import { GetStaticProps, GetStaticPaths } from 'next'
 import chroma from 'chroma-js'
 
 import api from '@/utils/api'
@@ -10,33 +10,53 @@ import { idByType } from '@/utils/constants'
 import { generateMainColor } from '@/utils/colors'
 import { PokemonCard } from '@/components'
 import useInfiniteScroll from '@/hooks/useInfiniteScroll'
+import { generateTypeSEO } from '@/utils/seo'
+import { getTypeStaticPaths } from '@/utils/generateStaticPages'
 
-const getPokemon = async (id: string) => {
-  return await api.get(`/type/${id}`).then((res) => res.data)
+interface TypePageProps {
+  typeData: any
+  typeName: string
 }
 
-export default function All() {
+export default function TypePage({ typeData, typeName }: TypePageProps) {
   const router = useRouter()
   const [page, setPage] = useState<number>(1)
-  const { data } = useQuery(router.query.name, getPokemon, {
-    enabled: !!router.query.name,
-  })
 
   const paginatedPokemon = useMemo(() => {
-    return data?.pokemon?.slice(0, page * 20)
-  }, [page, data])
+    return typeData?.pokemon?.slice(0, page * 20)
+  }, [page, typeData])
 
   useInfiniteScroll(() => setPage((value) => value + 1))
 
   useEffect(() => {
-    if (router.query.name) setPage(1)
-  }, [router.query.name])
+    setPage(1)
+  }, [typeName])
+
+  const seoConfig = generateTypeSEO(typeName, typeData?.pokemon?.length)
+  
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: `${typeName.charAt(0).toUpperCase() + typeName.slice(1)} Type Pokemon`,
+    description: `Complete collection of ${typeName} type Pokemon`,
+    url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://dailymon.com'}/type/${typeName}`,
+    mainEntity: {
+      '@type': 'ItemList',
+      name: `${typeName} Pokemon`,
+      numberOfItems: typeData?.pokemon?.length || 0,
+      description: `List of all ${typeName} type Pokemon`,
+    }
+  }
 
   return (
     <>
-      <Head>
-        <title>Dailymon - every day a new pokemon</title>
-      </Head>
+      <NextSeo {...seoConfig} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(structuredData),
+        }}
+      />
       <Flex flexDir="column" my={12}>
         <Stack
           isInline
@@ -58,12 +78,12 @@ export default function All() {
                     border="1px solid red"
                     borderColor={chroma(color).brighten().hex()}
                     color={
-                      router.query.name === mapType
+                      typeName === mapType
                         ? chroma(color).darken().hex()
                         : chroma(color).brighten().hex()
                     }
                     bg={
-                      router.query.name === mapType
+                      typeName === mapType
                         ? chroma(color).brighten().hex()
                         : 'transparent'
                     }
@@ -88,4 +108,26 @@ export default function All() {
       </Flex>
     </>
   )
+}
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  return getTypeStaticPaths()
+}
+
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  try {
+    const typeData = await api.get(`/type/${params?.name}`).then((res) => res.data)
+    
+    return {
+      props: {
+        typeData,
+        typeName: params?.name as string,
+      },
+      revalidate: 86400, // Revalidate once per day
+    }
+  } catch (error) {
+    return {
+      notFound: true,
+    }
+  }
 }

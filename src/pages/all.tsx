@@ -1,6 +1,6 @@
 import { Box, Button, Flex, Icon, SimpleGrid } from '@chakra-ui/react'
 import { FiPlus } from 'react-icons/fi'
-import Head from 'next/head'
+import { NextSeo } from 'next-seo'
 import { useInfiniteQuery } from 'react-query'
 
 import { PokemonCard } from '@/components'
@@ -9,6 +9,24 @@ import useInfiniteScroll from '@/hooks/useInfiniteScroll'
 
 const fetchPokemons = (key, cursor = 0) =>
   api.get(`pokemon?limit=21&offset=${cursor}`)
+
+const allPokemonSEO = {
+  title: 'All Pokemon - Complete Pokedex | Dailymon',
+  description: 'Browse through all Pokemon in our complete Pokedex. Discover stats, types, abilities, and evolution chains for every Pokemon from all generations.',
+  canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://dailymon.com'}/all`,
+  openGraph: {
+    title: 'All Pokemon - Complete Pokedex | Dailymon',
+    description: 'Browse through all Pokemon in our complete Pokedex. Discover stats, types, abilities, and evolution chains for every Pokemon from all generations.',
+    url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://dailymon.com'}/all`,
+    type: 'website',
+  },
+  additionalMetaTags: [
+    {
+      name: 'keywords',
+      content: 'pokemon list, all pokemon, pokedex, pokemon database, pokemon search, pokemon stats, pokemon types',
+    },
+  ],
+}
 
 export default function All() {
   const { data, fetchMore, isFetchingMore } = useInfiniteQuery(
@@ -24,9 +42,24 @@ export default function All() {
 
   return (
     <>
-      <Head>
-        <title>Dailymon - every day a new pokemon</title>
-      </Head>
+      <NextSeo {...allPokemonSEO} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'CollectionPage',
+            name: 'All Pokemon - Complete Pokedex',
+            description: 'Complete collection of all Pokemon with detailed information',
+            url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://dailymon.com'}/all`,
+            mainEntity: {
+              '@type': 'ItemList',
+              name: 'Pokemon List',
+              description: 'Complete list of all Pokemon',
+            }
+          }),
+        }}
+      />
       <Flex flexDir="column" my={12}>
         <SimpleGrid
           columns={{ base: 1, md: 2, xl: 3 }}

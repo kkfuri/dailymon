@@ -1,35 +1,70 @@
-import Head from 'next/head'
-import { useRouter } from 'next/router'
+import { NextSeo } from 'next-seo'
 import { Box } from '@chakra-ui/react'
-import { useQuery } from 'react-query'
+import { GetStaticProps, GetStaticPaths } from 'next'
+import Axios from 'axios'
 
 import api from '@/utils/api'
 import { FeaturedPokemon } from '@/components'
+import { generatePokemonSEO, generateStructuredData } from '@/utils/seo'
+import { getStaticPaths as getPokemonStaticPaths } from '@/utils/generateStaticPages'
 
-const getPokemon = async (id: string): Promise<PokemonAttrs> => {
-  return await api.get(`/pokemon/${id}`).then((res) => res.data)
+interface PokemonPageProps {
+  pokemon: PokemonAttrs | null
+  error?: boolean
 }
 
-export default function PokemonPage() {
-  const router = useRouter()
-  const { data, error } = useQuery<PokemonAttrs, Error>(
-    router.query.id,
-    getPokemon,
-    { retry: false }
-  )
-
-  if (error) {
-    router.push('/')
-    // return <ErrorPage statusCode={404} />
+export default function PokemonPage({ pokemon, error }: PokemonPageProps) {
+  if (error || !pokemon) {
+    return (
+      <>
+        <NextSeo title="Pokemon Not Found | Dailymon" noindex />
+        <Box mx="auto" w={{ base: '80%', md: 'full' }} maxW={{ md: 720 }} py={6}>
+          <p>Pokemon not found</p>
+        </Box>
+      </>
+    )
   }
+
+  const seoConfig = generatePokemonSEO(pokemon)
+  const structuredData = generateStructuredData(pokemon)
+
   return (
     <>
-      <Head>
-        <title>Dailymon - every day a new pokemon</title>
-      </Head>
+      <NextSeo {...seoConfig} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(structuredData),
+        }}
+      />
       <Box mx="auto" w={{ base: '80%', md: 'full' }} maxW={{ md: 720 }} py={6}>
-        <FeaturedPokemon {...data} />
+        <FeaturedPokemon {...pokemon} />
       </Box>
     </>
   )
+}
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  return getPokemonStaticPaths()
+}
+
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  try {
+    const pokemon = await api.get(`/pokemon/${params?.id}`).then((res) => res.data)
+    
+    return {
+      props: {
+        pokemon,
+      },
+      revalidate: 86400, // Revalidate once per day
+    }
+  } catch (error) {
+    return {
+      props: {
+        pokemon: null,
+        error: true,
+      },
+      revalidate: 3600, // Retry in 1 hour for errors
+    }
+  }
 }

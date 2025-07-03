@@ -1,17 +1,25 @@
 import { Box, SimpleGrid } from '@chakra-ui/react'
-import Head from 'next/head'
+import { NextSeo } from 'next-seo'
 import Axios from 'axios'
 
 import api from '@/utils/api'
 import { getThreeDayRangePokemons } from '@/utils/history'
 import { WhosThatPokemon, FeaturedPokemon } from '@/components'
+import { generateHomeSEO, generateStructuredData } from '@/utils/seo'
 
 export default function Home({ dailymon, yesterdaymon, tomorrowmon }) {
+  const seoConfig = generateHomeSEO(dailymon)
+  const structuredData = generateStructuredData(dailymon)
+
   return (
     <>
-      <Head>
-        <title>Dailymon - every day a new pokemon</title>
-      </Head>
+      <NextSeo {...seoConfig} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(structuredData),
+        }}
+      />
       <Box mx="auto" w={{ base: '80%', md: 'full' }} maxW={720} py={6}>
         {dailymon && <FeaturedPokemon {...dailymon} />}
       </Box>
@@ -36,5 +44,6 @@ export async function getStaticProps(ctx) {
 
   return {
     props: { dailymon, tomorrowmon, yesterdaymon },
+    revalidate: 3600, // Revalidate every hour for better SEO
   }
 }

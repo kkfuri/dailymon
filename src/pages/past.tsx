@@ -1,157 +1,89 @@
-import { useMemo, useState } from 'react'
-import dayjs from 'dayjs'
-import { Button, Flex, SimpleGrid } from '@chakra-ui/react'
-import Head from 'next/head'
+import { Box, Button, Flex, Icon, SimpleGrid } from '@chakra-ui/react'
+import { FiPlus } from 'react-icons/fi'
+import { NextSeo } from 'next-seo'
+import { useInfiniteQuery } from 'react-query'
 
-import { CalendarCard } from '@/components'
-import { getPastPokemons } from '@/utils/history'
-import { CgArrowLeft, CgArrowRight } from 'react-icons/cg'
+import { PokemonCard } from '@/components'
+import api from '@/utils/api'
+import useInfiniteScroll from '@/hooks/useInfiniteScroll'
 
-export default function Past({ pastPokemons }) {
-  const yesterday = dayjs().subtract(1, 'day')
-  const [year, setYear] = useState<number>(yesterday.year())
-  const [month, setMonth] = useState<number>(yesterday.month() + 1)
-  const years = Object.keys(pastPokemons).map(i => Number(i)).filter(i => i <= dayjs().year())
+const fetchPokemons = (key, cursor = 0) =>
+  api.get(`pokemon?limit=21&offset=${cursor}`)
 
-  const pokemons = useMemo(() => pastPokemons[year][month], [year, month])
+const pastPokemonSEO = {
+  title: 'Past Daily Pokemon - Historical Archive | Dailymon',
+  description: 'Explore our archive of past daily Pokemon. Discover which Pokemon were featured on previous days and relive the daily Pokemon journey.',
+  canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://dailymon.com'}/past`,
+  openGraph: {
+    title: 'Past Daily Pokemon - Historical Archive | Dailymon',
+    description: 'Explore our archive of past daily Pokemon. Discover which Pokemon were featured on previous days and relive the daily Pokemon journey.',
+    url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://dailymon.com'}/past`,
+    type: 'website',
+  },
+  additionalMetaTags: [
+    {
+      name: 'keywords',
+      content: 'past pokemon, daily pokemon archive, pokemon history, pokemon calendar, previous pokemon',
+    },
+  ],
+}
 
-  // Pokemon should be hidden when it's date has not past yet
-  const isPokemonHidden = (day: number) => year === dayjs().year() && month > (dayjs().month() + 1) || year === dayjs().year() && month === (dayjs().month() + 1) && day > dayjs().date()
-
-  function handlePastMonth() {
-    setMonth(m => m === 1 ? 12 : m - 1)
-    if (month === 1) {
-      setYear(y => y - 1)
+export default function Past() {
+  const { data, fetchMore, isFetchingMore } = useInfiniteQuery(
+    'pastPokemons',
+    fetchPokemons,
+    {
+      getFetchMore: ({ data }) =>
+        data.next.split('offset=')[1].split('&limit=')[0],
     }
-  }
+  )
 
-  function handleNextMonth() {
-    setMonth(m => m === 12 ? 1 : m + 1)
-    if (month === 12 && years[years.length - 1] !== year) {
-      setYear(y => y + 1)
-    }
-  }
+  useInfiniteScroll(fetchMore)
 
   return (
     <>
-      <Head>
-        <title>Dailymon - every day a new pokemon</title>
-      </Head>
+      <NextSeo {...pastPokemonSEO} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'CollectionPage',
+            name: 'Past Daily Pokemon Archive',
+            description: 'Historical archive of past daily featured Pokemon',
+            url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://dailymon.com'}/past`,
+            mainEntity: {
+              '@type': 'ItemList',
+              name: 'Past Pokemon List',
+              description: 'Archive of previously featured daily Pokemon',
+            }
+          }),
+        }}
+      />
       <Flex flexDir="column" my={12}>
         <SimpleGrid
-          columns={years.length}
+          columns={{ base: 1, md: 2, xl: 3 }}
           spacing={6}
           maxW={1240}
           mx="auto"
-          py={4}
-        >
-          {years.map(possibleYear => (
-            <Button
-              key={possibleYear}
-              isActive={possibleYear === year}
-              textTransform="uppercase"
-              colorScheme="violet"
-              color="white"
-              letterSpacing="tighter"
-              fontWeight="300"
-              fontSize="large"
-              border="2px solid transparent"
-              _active={{
-                color: 'white',
-                border: '2px solid var(--chakra-colors-violet-300)',
-                background: 'transparent',
-              }}
-              _focus={{
-                boxShadow: 'var(--chakra-colors-violet-shadow) 0px 0px 0px 3px'
-              }}
-              onClick={() => setYear(possibleYear)}
-            >
-              {possibleYear}
-            </Button>
-          ))}
-        </SimpleGrid>
-        <Flex justifyContent="center" alignItems="center" px={{ base: 4, md: 0 }}>
-          <Button
-            onClick={handlePastMonth}
-            colorScheme="violet"
-            color="white"
-            _focus={{
-              boxShadow: 'var(--chakra-colors-violet-shadow) 0px 0px 0px 3px'
-            }}
-            isDisabled={month === 1 && year === years[0]}
-          >
-            <CgArrowLeft style={{ cursor: 'pointer' }} size="2.8rem" />
-          </Button>
-          <SimpleGrid
-            columns={{ base: 3, md: 6 }}
-            spacing={2}
-            maxW={1240}
-            mx={4}
-            py={2}
-          >
-            {year && Array.from({ length: 12 }, (_, i) => i + 1).map(possibleMonth => (
-              <Button
-                key={possibleMonth}
-                isActive={month === possibleMonth}
-                size="sm"
-                fontWeight="300"
-                textTransform="uppercase"
-                letterSpacing="wider"
-                colorScheme="violet"
-                color="white"
-                border="2px solid transparent"
-                _active={{
-                  border: '2px solid var(--chakra-colors-violet-300)',
-                  background: 'transparent',
-                }}
-                _focus={{
-                  boxShadow: 'var(--chakra-colors-violet-shadow) 0px 0px 0px 3px'
-                }}
-                onClick={() => setMonth(possibleMonth)}>
-                {dayjs().month(possibleMonth - 1).format('MMMM')}
-              </Button>
-            ))}
-          </SimpleGrid>
-          <Button
-            onClick={handleNextMonth}
-            colorScheme="violet"
-            color="white"
-            _focus={{
-              boxShadow: 'var(--chakra-colors-violet-shadow) 0px 0px 0px 3px'
-            }}
-            isDisabled={month === 12 && year === years[years.length - 1]}
-          >
-            <CgArrowRight style={{ cursor: 'pointer' }} size="2.8rem" />
-          </Button>
-        </Flex>
-        <SimpleGrid
-          columns={{ base: 1, md: 7 }}
-          justifyContent="center"
-          maxW={1240}
-          w="100%"
-          mx="auto"
-          px={{ base: 4, md: 0 }}
           py={6}
+          minH="100vh"
         >
-          {Object.keys(pokemons).map((key) => (
-            <CalendarCard
-              key={key}
-              id={pokemons[key]}
-              date={dayjs([month, key, year].join('/'))}
-              hide={isPokemonHidden(Number(key))} />
-          ))}
+          {data &&
+            data.map(({ data: group }) =>
+              group.results.map((i) => <PokemonCard key={i.name} {...i} />)
+            )}
         </SimpleGrid>
+        <Box mx="auto">
+          <Button
+            onClick={() => fetchMore()}
+            size="lg"
+            isLoading={!!isFetchingMore}
+          >
+            See more <Icon as={FiPlus} ml={2} />
+          </Button>
+        </Box>
       </Flex>
     </>
   )
-}
-
-export async function getStaticProps(ctx) {
-  const pastPokemons = getPastPokemons()
-
-  return {
-    props: {
-      pastPokemons
-    },
-  }
 }
